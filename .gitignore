@@ -7,3 +7,5 @@ l2fprod-common-*
 target
 bin
 build
+/.settings/
+/pom.xml

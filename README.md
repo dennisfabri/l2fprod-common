@@ -10,37 +10,37 @@ interfaces.
 <table cellspacing="5" border="0">
   <tr>
     <td align="center">
-      <a href="xdocs/ButtonBar.jpg">
-        <img src="xdocs/tn-ButtonBar.jpg" width="150" height="112"/>
+      <a href="images/ButtonBar.jpg">
+        <img src="images/tn-ButtonBar.jpg" width="150" height="112"/>
       </a>
     </td>
     <td align="center">
-      <a href="xdocs/PropertySheet.jpg">
-        <img src="xdocs/tn-PropertySheet.jpg" width="150" height="112"/>
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <a href="xdocs/FontChooser.jpg">
-        <img src="xdocs/tn-FontChooser.jpg" width="150" height="112"/>
-      </a>
-    </td>
-    <td align="center">
-      <a href="xdocs/JTaskPane-DirectoryChooser.jpg">
-        <img src="xdocs/tn-JTaskPane-DirectoryChooser.jpg" width="150" height="112"/>
+      <a href="images/PropertySheet.jpg">
+        <img src="images/tn-PropertySheet.jpg" width="150" height="112"/>
       </a>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <a href="xdocs/taskpane-ocean.png">
-        <img src="xdocs/tn-taskpane-ocean.png"/>
+      <a href="images/FontChooser.jpg">
+        <img src="images/tn-FontChooser.jpg" width="150" height="112"/>
       </a>
     </td>
     <td align="center">
-      <a href="xdocs/taskpane-glossy.png">
-        <img src="xdocs/tn-taskpane-glossy.png"/>
+      <a href="images/JTaskPane-DirectoryChooser.jpg">
+        <img src="images/tn-JTaskPane-DirectoryChooser.jpg" width="150" height="112"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="images/taskpane-ocean.png">
+        <img src="images/tn-taskpane-ocean.png"/>
+      </a>
+    </td>
+    <td align="center">
+      <a href="images/taskpane-glossy.png">
+        <img src="images/tn-taskpane-glossy.png"/>
       </a>
     </td>
   </tr>
@@ -75,23 +75,16 @@ Swing toolkit.
 ## Build
 
    ```
-   ant dist
+   mvn package
    ```
 
 ## The Distribution
 
-In the distribution, there are several jar files, one per component
-plus one including all components. This allows developers to include
-only the classes for the components they want to use.
+In the distribution, there are several jar files, one per component. 
+This allows developers to include only the classes for the components 
+they want to use.
 
 To run the demo from the distribution, use:
    ```
-   java -jar lib\l2fprod-common-all.jar
-   ```
-
-Each jar embeds its own demo too. For example to view the JTaskPane
-demo, use:
-
-   ```
-   java -jar lib\l2fprod-common-tasks.jar
+   java -jar l2fprod-common-demo.jar
    ```
