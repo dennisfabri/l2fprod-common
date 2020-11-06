@@ -17,10 +17,6 @@
  */
 package com.l2fprod.common.demo;
 
-import com.l2fprod.common.Version;
-import com.l2fprod.common.swing.JButtonBar;
-import com.l2fprod.common.swing.LookAndFeelTweaks;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.File;
@@ -29,82 +25,87 @@ import javax.swing.AbstractButton;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import junit.framework.TestCase;
-
+import org.junit.Ignore;
 import org.netbeans.jemmy.ComponentChooser;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.operators.AbstractButtonOperator;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.util.PNGEncoder;
 
+import com.l2fprod.common.buttonbar.JButtonBar;
+import com.l2fprod.common.shared.Version;
+import com.l2fprod.common.shared.swing.LookAndFeelTweaks;
+
+import junit.framework.TestCase;
+
 /**
  * MainUnitTest. <br>
- *  
+ * 
  */
 public class MainUnitTest extends TestCase {
 
-  private JFrame demo;
+    private JFrame demo;
 
-  protected void setUp() throws Exception {
-    super.setUp();
+    protected void setUp() throws Exception {
+        super.setUp();
 
-    JemmyProperties.getProperties().setDispatchingModel(
-      JemmyProperties.ROBOT_MODEL_MASK);
+        JemmyProperties.getProperties().setDispatchingModel(JemmyProperties.ROBOT_MODEL_MASK);
 
-    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (Exception e) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+        }
+
+        LookAndFeelTweaks.tweak();
+
+        demo = new JFrame("L2FProd.com Common Components " + Version.getVersion() + " (build "
+                + Version.getBuildTimestamp() + ")");
+        demo.getContentPane().setLayout(new BorderLayout());
+        demo.getContentPane().add("Center", new Main());
+        demo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        demo.setSize(400, 500);
+        demo.setLocation(100, 100);
+        demo.setVisible(true);
     }
 
-    LookAndFeelTweaks.tweak();
+    public void testJButtonBar() throws Exception {
 
-    demo = new JFrame("L2FProd.com Common Components "
-      + Version.getVersion() + " (build " + Version.getBuildTimestamp() + ")");
-    demo.getContentPane().setLayout(new BorderLayout());
-    demo.getContentPane().add("Center", new Main());
-    demo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    demo.setSize(400, 500);
-    demo.setLocation(100, 100);
-    demo.setVisible(true);
-  }
+        System.out.println("1");
+        // iterate through JButtons of JButtonBar
+        JButtonBar buttonbar = (JButtonBar) ComponentOperator.waitComponent(demo, new ComponentChooser() {
+            public boolean checkComponent(Component arg0) {
+                return arg0 instanceof JButtonBar;
+            }
 
-  public void testJButtonBar() throws Exception {
-    // iterate through JButtons of JButtonBar
-    JButtonBar buttonbar =
-      (
-        JButtonBar)ComponentOperator
-          .waitComponent(demo, new ComponentChooser() {
-      public boolean checkComponent(Component arg0) {
-        return arg0 instanceof JButtonBar;
-      }
-      public String getDescription() {
-        return null;
-      }
-    });
+            public String getDescription() {
+                return null;
+            }
+        });
 
-    Component[] components = buttonbar.getComponents();
-    for (int i = 0, c = components.length; i < c; i++) {
-      if (components[i] instanceof AbstractButton) {
-        AbstractButton button = (AbstractButton)components[i];
-        new AbstractButtonOperator(button).push();
-        // after each click on the button, perform a screenshot
-        File screenshot = new File("screenshot-" + i + ".png");
-        System.out.println("Screenshot in " + screenshot.getAbsolutePath());
-        PNGEncoder.captureScreen(
-          demo,
-          screenshot.getAbsolutePath(),
-          PNGEncoder.COLOR_MODE);
-      }
+        System.out.println("2");
+
+        Component[] components = buttonbar.getComponents();
+        for (int i = 0, c = components.length; i < c; i++) {
+            if (components[i] instanceof AbstractButton) {
+                System.out.println(".");
+
+                AbstractButton button = (AbstractButton) components[i];
+                new AbstractButtonOperator(button).push();
+                // after each click on the button, perform a screenshot
+                File screenshot = new File("screenshot-" + i + ".png");
+                System.out.println("Screenshot in " + screenshot.getAbsolutePath());
+                PNGEncoder.captureScreen(demo, screenshot.getAbsolutePath(), PNGEncoder.COLOR_MODE);
+            }
+        }
+        System.out.println("4");
     }
-  }
 
-  protected void tearDown() throws Exception {
-    demo = null;
-    super.tearDown();
-  }
+    protected void tearDown() throws Exception {
+        demo = null;
+        super.tearDown();
+    }
 
-  public MainUnitTest(String arg0) {
-    super(arg0);
-  }
-
+    public MainUnitTest(String arg0) {
+        super(arg0);
+    }
 }

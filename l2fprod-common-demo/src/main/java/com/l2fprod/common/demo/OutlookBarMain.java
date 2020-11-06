@@ -17,12 +17,6 @@
  */
 package com.l2fprod.common.demo;
 
-import com.l2fprod.common.swing.JOutlookBar;
-import com.l2fprod.common.swing.PercentLayout;
-import com.l2fprod.common.swing.plaf.LookAndFeelAddons;
-import com.l2fprod.common.swing.plaf.metal.MetalLookAndFeelAddons;
-import com.l2fprod.common.swing.plaf.windows.WindowsLookAndFeelAddons;
-
 import java.awt.BorderLayout;
 
 import javax.swing.ImageIcon;
@@ -36,95 +30,97 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.plaf.ButtonUI;
 
+import com.l2fprod.common.outlookbar.JOutlookBar;
+import com.l2fprod.common.shared.swing.PercentLayout;
+import com.l2fprod.common.shared.swing.plaf.LookAndFeelAddons;
+import com.l2fprod.common.shared.swing.plaf.metal.MetalLookAndFeelAddons;
+import com.l2fprod.common.shared.swing.plaf.windows.WindowsLookAndFeelAddons;
+
 /**
  * OutlookBarMain. <br>
- *  
+ * 
  */
 public class OutlookBarMain extends JPanel {
 
-  public OutlookBarMain() throws Exception {
-    setLayout(new BorderLayout());
+    public OutlookBarMain() throws Exception {
+        setLayout(new BorderLayout());
 
-    JTabbedPane tabs = new JTabbedPane();
+        JTabbedPane tabs = new JTabbedPane();
 
-    { // the metal look and feel
-      UIManager
-        .setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-      LookAndFeelAddons.setAddon(MetalLookAndFeelAddons.class);
-      tabs.addTab("Metal L&F", makeOutlookPanel(SwingConstants.CENTER));
+        { // the metal look and feel
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            LookAndFeelAddons.setAddon(MetalLookAndFeelAddons.class);
+            tabs.addTab("Metal L&F", makeOutlookPanel(SwingConstants.CENTER));
+        }
+
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+        { // the windows look and feel
+            LookAndFeelAddons.setAddon(WindowsLookAndFeelAddons.class);
+            tabs.addTab("Windows L&F", makeOutlookPanel(SwingConstants.LEFT));
+        }
+
+        add("Center", tabs);
     }
 
-    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    JPanel makeOutlookPanel(int alignment) {
+        JOutlookBar outlook = new JOutlookBar();
+        outlook.setTabPlacement(JTabbedPane.LEFT);
+        addTab(outlook, "Folders");
+        addTab(outlook, "Backup");
 
-    { // the windows look and feel
-      LookAndFeelAddons.setAddon(WindowsLookAndFeelAddons.class);
-      tabs.addTab("Windows L&F", makeOutlookPanel(SwingConstants.LEFT));
+        // show it is possible to add any component to the bar
+        JTree tree = new JTree();
+        outlook.addTab("A JTree", outlook.makeScrollPane(tree));
+
+        outlook.addTab("Disabled", new JButton());
+        outlook.setEnabledAt(3, false);
+        outlook.setAllTabsAlignment(alignment);
+
+        JPanel panel = new JPanel(new PercentLayout(PercentLayout.HORIZONTAL, 3));
+        panel.add(outlook, "100");
+        return panel;
     }
 
-    add("Center", tabs);
-  }
+    void addTab(JOutlookBar tabs, String title) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new PercentLayout(PercentLayout.VERTICAL, 0));
+        panel.setOpaque(false);
 
-  JPanel makeOutlookPanel(int alignment) {
-    JOutlookBar outlook = new JOutlookBar();
-    outlook.setTabPlacement(JTabbedPane.LEFT);
-    addTab(outlook, "Folders");
-    addTab(outlook, "Backup");
+        String[] buttons = new String[] { "Inbox", "icons/outlook-inbox.gif", "Outbox", "icons/outlook-outbox.gif",
+                "Drafts", "icons/outlook-inbox.gif", "Templates", "icons/outlook-inbox.gif", "Deleted Items",
+                "icons/outlook-trash.gif", };
 
-    // show it is possible to add any component to the bar
-    JTree tree = new JTree();
-    outlook.addTab("A JTree", outlook.makeScrollPane(tree));
+        for (int i = 0, c = buttons.length; i < c; i += 2) {
+            JButton button = new JButton(buttons[i]);
+            try {
+                button.setUI((ButtonUI) Class.forName((String) UIManager.get("OutlookButtonUI")).newInstance());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            button.setIcon(new ImageIcon(OutlookBarMain.class.getResource(buttons[i + 1])));
+            panel.add(button);
+        }
 
-    outlook.addTab("Disabled", new JButton());
-    outlook.setEnabledAt(3, false);
-    outlook.setAllTabsAlignment(alignment);
-    
-    JPanel panel = new JPanel(new PercentLayout(PercentLayout.HORIZONTAL, 3));
-    panel.add(outlook, "100");
-    return panel;
-  }
+        JScrollPane scroll = tabs.makeScrollPane(panel);
+        tabs.addTab("", scroll);
 
-  void addTab(JOutlookBar tabs, String title) {
-    JPanel panel = new JPanel();
-    panel.setLayout(new PercentLayout(PercentLayout.VERTICAL, 0));
-    panel.setOpaque(false);
-
-    String[] buttons = new String[] {"Inbox", "icons/outlook-inbox.gif",
-      "Outbox", "icons/outlook-outbox.gif", "Drafts", "icons/outlook-inbox.gif",
-      "Templates", "icons/outlook-inbox.gif", "Deleted Items",
-      "icons/outlook-trash.gif",};
-
-    for (int i = 0, c = buttons.length; i < c; i += 2) {
-      JButton button = new JButton(buttons[i]);
-      try {
-        button.setUI((ButtonUI)Class.forName(
-          (String)UIManager.get("OutlookButtonUI")).newInstance());
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-      button.setIcon(new ImageIcon(OutlookBarMain.class
-        .getResource(buttons[i + 1])));
-      panel.add(button);
+        // this to test the UI gets notified of changes
+        int index = tabs.indexOfComponent(scroll);
+        tabs.setTitleAt(index, title);
+        tabs.setToolTipTextAt(index, title + " Tooltip");
     }
 
-    JScrollPane scroll = tabs.makeScrollPane(panel);
-    tabs.addTab("", scroll);
+    public static void main(String[] args) throws Exception {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-    // this to test the UI gets notified of changes
-    int index = tabs.indexOfComponent(scroll);
-    tabs.setTitleAt(index, title);
-    tabs.setToolTipTextAt(index, title + " Tooltip");
-  }
-
-  public static void main(String[] args) throws Exception {
-    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
-    JFrame frame = new JFrame("JOutlookBar");
-    frame.getContentPane().setLayout(new BorderLayout());
-    frame.getContentPane().add("Center", new OutlookBarMain());
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.pack();
-    frame.setLocation(100, 100);
-    frame.setVisible(true);
-  }
+        JFrame frame = new JFrame("JOutlookBar");
+        frame.getContentPane().setLayout(new BorderLayout());
+        frame.getContentPane().add("Center", new OutlookBarMain());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setLocation(100, 100);
+        frame.setVisible(true);
+    }
 
 }

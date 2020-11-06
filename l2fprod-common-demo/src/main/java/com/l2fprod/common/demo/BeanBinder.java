@@ -17,16 +17,16 @@
  */
 package com.l2fprod.common.demo;
 
-import com.l2fprod.common.model.DefaultBeanInfoResolver;
-import com.l2fprod.common.propertysheet.Property;
-import com.l2fprod.common.propertysheet.PropertySheetPanel;
-
 import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 
 import javax.swing.UIManager;
+
+import com.l2fprod.common.shared.model.DefaultBeanInfoResolver;
+import com.l2fprod.common.sheet.Property;
+import com.l2fprod.common.sheet.PropertySheetPanel;
 
 /**
  * Binds a bean object to a PropertySheet.
@@ -35,43 +35,42 @@ import javax.swing.UIManager;
  */
 public class BeanBinder {
 
-  private final Object bean;
-  private final PropertySheetPanel sheet;
-  private final PropertyChangeListener listener;
+    private final Object bean;
+    private final PropertySheetPanel sheet;
+    private final PropertyChangeListener listener;
 
-  public BeanBinder(Object bean, PropertySheetPanel sheet) {
-    this(bean, sheet, new DefaultBeanInfoResolver().getBeanInfo(bean));
-  }
+    public BeanBinder(Object bean, PropertySheetPanel sheet) {
+        this(bean, sheet, new DefaultBeanInfoResolver().getBeanInfo(bean));
+    }
 
-  public BeanBinder(Object bean, PropertySheetPanel sheet, BeanInfo beanInfo) {
-    this.bean = bean;
-    this.sheet = sheet;
+    public BeanBinder(Object bean, PropertySheetPanel sheet, BeanInfo beanInfo) {
+        this.bean = bean;
+        this.sheet = sheet;
 
-    sheet.setProperties(beanInfo.getPropertyDescriptors());
-    sheet.readFromObject(bean);
+        sheet.setProperties(beanInfo.getPropertyDescriptors());
+        sheet.readFromObject(bean);
 
-    // everytime a property change, update the button with it
-    listener = new PropertyChangeListener() {
-      public void propertyChange(PropertyChangeEvent evt) {
-        Property prop = (Property)evt.getSource();
-        try {
-          prop.writeToObject(BeanBinder.this.bean);
-        } catch (RuntimeException e) {
-          // handle PropertyVetoException and restore previous value
-          if (e.getCause() instanceof PropertyVetoException) {
-            UIManager.getLookAndFeel().provideErrorFeedback(
-              BeanBinder.this.sheet);
-            prop.setValue(evt.getOldValue());
-          }
-        }
-      }
-    };
-    sheet.addPropertySheetChangeListener(listener);
-  }
+        // everytime a property change, update the button with it
+        listener = new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                Property prop = (Property) evt.getSource();
+                try {
+                    prop.writeToObject(BeanBinder.this.bean);
+                } catch (RuntimeException e) {
+                    // handle PropertyVetoException and restore previous value
+                    if (e.getCause() instanceof PropertyVetoException) {
+                        UIManager.getLookAndFeel().provideErrorFeedback(BeanBinder.this.sheet);
+                        prop.setValue(evt.getOldValue());
+                    }
+                }
+            }
+        };
+        sheet.addPropertySheetChangeListener(listener);
+    }
 
-  public void unbind() {
-    sheet.removePropertyChangeListener(listener);
-    sheet.setProperties(new Property[0]);
-  }
+    public void unbind() {
+        sheet.removePropertyChangeListener(listener);
+        sheet.setProperties(new Property[0]);
+    }
 
 }

@@ -12,6 +12,6 @@
     <j2se version="1.4+"/> 
     <jar href="l2fprod-common-all.jar"/>
   </resources> 
-  <application-desc main-class="com.l2fprod.common.demo.Main">
+  <application-desc main-class="com.l2fprod.common.shared.demo.Main">
   </application-desc>
 </jnlp>

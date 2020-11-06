@@ -7,3 +7,5 @@ target
 bin
 build
 .settings/
+
+l2fprod-common-demo/screenshot-*.png

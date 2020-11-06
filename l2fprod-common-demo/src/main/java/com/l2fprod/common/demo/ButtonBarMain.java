@@ -17,126 +17,134 @@
  */
 package com.l2fprod.common.demo;
 
-import com.l2fprod.common.swing.JButtonBar;
-import com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI;
-import com.l2fprod.common.swing.plaf.misc.IconPackagerButtonBarUI;
-import com.l2fprod.common.util.ResourceManager;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JToggleButton;
+import javax.swing.UIManager;
+
+import com.l2fprod.common.buttonbar.JButtonBar;
+import com.l2fprod.common.buttonbar.plaf.blue.BlueishButtonBarUI;
+import com.l2fprod.common.buttonbar.plaf.misc.IconPackagerButtonBarUI;
+import com.l2fprod.common.shared.util.ResourceManager;
 
 /**
  * Demo of the JButtonBar. <br>
- *  
+ * 
  */
 public class ButtonBarMain extends JPanel {
 
-  static ResourceManager RESOURCE = ResourceManager.get(ButtonBarMain.class);
+    static ResourceManager RESOURCE = ResourceManager.get(ButtonBarMain.class);
 
-  public ButtonBarMain() {
-    setLayout(new BorderLayout());
+    public ButtonBarMain() {
+        setLayout(new BorderLayout());
 
-    JTabbedPane tabs = new JTabbedPane();
-    add("Center", tabs);
+        JTabbedPane tabs = new JTabbedPane();
+        add("Center", tabs);
 
-    { // with the mozilla L&F
-      JButtonBar toolbar = new JButtonBar(JButtonBar.VERTICAL);
-      toolbar.setUI(new BlueishButtonBarUI());
-      tabs.addTab("Mozilla L&F", new ButtonBarPanel(toolbar));
-    }
-
-    { // with the icon packager L&F
-      JButtonBar toolbar = new JButtonBar(JButtonBar.VERTICAL);
-      toolbar.setUI(new IconPackagerButtonBarUI());
-      tabs.addTab("Icon Packager L&F", new ButtonBarPanel(toolbar));
-    }
-  }
-
-  static class ButtonBarPanel extends JPanel {
-
-    private Component currentComponent;
-
-    public ButtonBarPanel(JButtonBar toolbar) {
-      setLayout(new BorderLayout());
-
-      add("West", toolbar);
-
-      ButtonGroup group = new ButtonGroup();
-
-      addButton(RESOURCE.getString("Main.welcome"), "icons/welcome32x32.png",
-        makePanel(RESOURCE.getString("Main.welcome")), toolbar, group);
-
-      addButton(RESOURCE.getString("Main.settings"),
-        "icons/propertysheet32x32.png", makePanel(RESOURCE
-          .getString("Main.settings")),
-
-        toolbar, group);
-
-      addButton(RESOURCE.getString("Main.sounds"), "icons/fonts32x32.png",
-        makePanel(RESOURCE.getString("Main.sounds")), toolbar, group);
-
-      addButton(RESOURCE.getString("Main.stats"), "icons/folder32x32.png",
-        makePanel(RESOURCE.getString("Main.stats")), toolbar, group);
-    }
-
-    private JPanel makePanel(String title) {
-      JPanel panel = new JPanel(new BorderLayout());
-      JLabel top = new JLabel(title);
-      top.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-      top.setFont(top.getFont().deriveFont(Font.BOLD));
-      top.setOpaque(true);
-      top.setBackground(panel.getBackground().brighter());
-      panel.add("North", top);
-      panel.setPreferredSize(new Dimension(400, 300));
-      panel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-      return panel;
-    }
-
-    private void show(Component component) {
-      if (currentComponent != null) {
-        remove(currentComponent);
-      }
-      add("Center", currentComponent = component);
-      revalidate();
-      repaint();
-    }
-
-    private void addButton(String title, String iconUrl,
-      final Component component, JButtonBar bar, ButtonGroup group) {
-      Action action = new AbstractAction(title, new ImageIcon(
-        ButtonBarMain.class.getResource(iconUrl))) {
-        public void actionPerformed(ActionEvent e) {
-          show(component);
+        { // with the mozilla L&F
+            JButtonBar toolbar = new JButtonBar(JButtonBar.VERTICAL);
+            toolbar.setUI(new BlueishButtonBarUI());
+            tabs.addTab("Mozilla L&F", new ButtonBarPanel(toolbar));
         }
-      };
 
-      JToggleButton button = new JToggleButton(action);
-      bar.add(button);
-
-      group.add(button);
-
-      if (group.getSelection() == null) {
-        button.setSelected(true);
-        show(component);
-      }
+        { // with the icon packager L&F
+            JButtonBar toolbar = new JButtonBar(JButtonBar.VERTICAL);
+            toolbar.setUI(new IconPackagerButtonBarUI());
+            tabs.addTab("Icon Packager L&F", new ButtonBarPanel(toolbar));
+        }
     }
-  }
 
-  public static void main(String[] args) throws Exception {
-    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    static class ButtonBarPanel extends JPanel {
 
-    JFrame frame = new JFrame("ButtonBar");
-    frame.getContentPane().setLayout(new BorderLayout());
-    frame.getContentPane().add("Center", new ButtonBarMain());
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.pack();
-    frame.setLocation(100, 100);
-    frame.setVisible(true);
-  }
+        private Component currentComponent;
+
+        public ButtonBarPanel(JButtonBar toolbar) {
+            setLayout(new BorderLayout());
+
+            add("West", toolbar);
+
+            ButtonGroup group = new ButtonGroup();
+
+            addButton(RESOURCE.getString("Main.welcome"), "icons/welcome32x32.png",
+                    makePanel(RESOURCE.getString("Main.welcome")), toolbar, group);
+
+            addButton(RESOURCE.getString("Main.settings"), "icons/propertysheet32x32.png",
+                    makePanel(RESOURCE.getString("Main.settings")),
+
+                    toolbar, group);
+
+            addButton(RESOURCE.getString("Main.sounds"), "icons/fonts32x32.png",
+                    makePanel(RESOURCE.getString("Main.sounds")), toolbar, group);
+
+            addButton(RESOURCE.getString("Main.stats"), "icons/folder32x32.png",
+                    makePanel(RESOURCE.getString("Main.stats")), toolbar, group);
+        }
+
+        private JPanel makePanel(String title) {
+            JPanel panel = new JPanel(new BorderLayout());
+            JLabel top = new JLabel(title);
+            top.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+            top.setFont(top.getFont().deriveFont(Font.BOLD));
+            top.setOpaque(true);
+            top.setBackground(panel.getBackground().brighter());
+            panel.add("North", top);
+            panel.setPreferredSize(new Dimension(400, 300));
+            panel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+            return panel;
+        }
+
+        private void show(Component component) {
+            if (currentComponent != null) {
+                remove(currentComponent);
+            }
+            add("Center", currentComponent = component);
+            revalidate();
+            repaint();
+        }
+
+        private void addButton(String title, String iconUrl, final Component component, JButtonBar bar,
+                ButtonGroup group) {
+            Action action = new AbstractAction(title, new ImageIcon(ButtonBarMain.class.getResource(iconUrl))) {
+                public void actionPerformed(ActionEvent e) {
+                    show(component);
+                }
+            };
+
+            JToggleButton button = new JToggleButton(action);
+            bar.add(button);
+
+            group.add(button);
+
+            if (group.getSelection() == null) {
+                button.setSelected(true);
+                show(component);
+            }
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+        JFrame frame = new JFrame("ButtonBar");
+        frame.getContentPane().setLayout(new BorderLayout());
+        frame.getContentPane().add("Center", new ButtonBarMain());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setLocation(100, 100);
+        frame.setVisible(true);
+    }
 
 }
