@@ -23,12 +23,20 @@
 		<dependency>
 			<groupId>com.toedter</groupId>
 			<artifactId>jcalendar</artifactId>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.nachocalendar</groupId>
 			<artifactId>nachocalendar</artifactId>
+			<optional>true</optional>
 		</dependency>
-
+		<dependency>
+			<!-- required for nachocalendar -->
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.30</version>
+			<optional>true</optional>
+		</dependency>
 
 		<dependency>
 			<artifactId>l2fprod-common-fontchooser</artifactId>

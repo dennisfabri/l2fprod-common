@@ -6,7 +6,8 @@ module com.l2fprod.common.sheet {
 
     requires java.datatransfer;
     requires java.desktop;
-    requires jcalendar;
+    requires static jcalendar;
     requires com.l2fprod.common.shared;
-    requires nachocalendar;
+    requires static net.sf.nachocalendar;
+    requires static org.slf4j;
 }
