@@ -19,13 +19,13 @@ package com.l2fprod.common.demo;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 
 import javax.swing.AbstractButton;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import org.junit.Ignore;
 import org.netbeans.jemmy.ComponentChooser;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.operators.AbstractButtonOperator;
@@ -49,6 +49,11 @@ public class MainUnitTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
+        if (GraphicsEnvironment.isHeadless()) {
+            // No ui -> no ui test
+            return;
+        }
+
         JemmyProperties.getProperties().setDispatchingModel(JemmyProperties.ROBOT_MODEL_MASK);
 
         try {
@@ -69,7 +74,11 @@ public class MainUnitTest extends TestCase {
     }
 
     public void testJButtonBar() throws Exception {
-
+        if (GraphicsEnvironment.isHeadless()) {
+            // No ui -> no ui test
+            return;
+        }
+        
         System.out.println("1");
         // iterate through JButtons of JButtonBar
         JButtonBar buttonbar = (JButtonBar) ComponentOperator.waitComponent(demo, new ComponentChooser() {
