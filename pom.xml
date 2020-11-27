@@ -58,6 +58,14 @@
 		</license>
 	</licenses>
 
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub dennisfabri Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/dennisfabri/l2fprod-common</url>
+		</repository>
+	</distributionManagement>
+
 	<scm>
 		<connection>https://github.com/dennisfabri/l2fprod-common.git</connection>
 		<url>https://github.com/dennisfabri/l2fprod-common</url>
