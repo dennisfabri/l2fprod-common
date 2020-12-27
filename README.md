@@ -1,6 +1,6 @@
 # L2FProd.com Common Components
 
-:warning: This project is no longer maintained. Not guaranteed to compile with modern JDK.
+:warning: This project is not under active development. Current changes only include update to Java 11, introduction of java modules and source cleanup.
 
 Swing has lot of components built-in but still some are missing. This
 project provides the developer community with these missing
